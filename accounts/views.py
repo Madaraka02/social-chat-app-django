@@ -48,7 +48,6 @@ def login(request, *args, **kwargs):
         return redirect("home")
 
       
-
     if request.POST:
         form = LoginForm(request.POST)
         if form.is_valid():
