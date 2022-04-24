@@ -47,7 +47,7 @@ def login(request, *args, **kwargs):
     if user.is_authenticated:
         return redirect("home")
 
-    destination = get_redirect_if_exists(request)   
+      
 
     if request.POST:
         form = LoginForm(request.POST)
@@ -55,8 +55,14 @@ def login(request, *args, **kwargs):
             email = request.POST['email']
             password = request.POST['password']
             user = authenticate(email=email, password=password)
-
-
+            if user:
+                login(request, user)
+                destination = get_redirect_if_exists(request) 
+                if destination:
+                    return redirect(destination)
+                return redirect("home") 
+        else: 
+            context['login_form']  = form
     return render(request,"accounts/login.html", context)
 
 
