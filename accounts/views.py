@@ -1,7 +1,8 @@
 import re
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
+from matplotlib.style import context
 
 
 from .forms import *
@@ -21,7 +22,7 @@ def register(request, *args, **kwargs):
             raw_password = form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
             login(request, account)
-            destination = kwargs.get('next')
+            destination = get_redirect_if_exists(request) 
             if destination:
                 return redirect(destination)
             return redirect("home")    
@@ -31,4 +32,37 @@ def register(request, *args, **kwargs):
 
 
 
-    return render(request, 'accounts/register.html')    
+    return render(request, 'accounts/register.html', context)    
+
+def logout_view(request):
+    logout(request)
+    return redirect("home")
+
+
+def login(request, *args, **kwargs):
+
+
+    context={}
+    user=request.user
+    if user.is_authenticated:
+        return redirect("home")
+
+    destination = get_redirect_if_exists(request)   
+
+    if request.POST:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = request.POST['email']
+            password = request.POST['password']
+            user = authenticate(email=email, password=password)
+
+
+    return render(request,"accounts/login.html", context)
+
+
+def get_redirect_if_exists(request):
+    redirect = None
+    if request.GET:
+        if request.GET.get("next"):
+            redirect (str(request.GET.get("next")))  
+    return redirect        
