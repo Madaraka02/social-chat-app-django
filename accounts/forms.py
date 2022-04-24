@@ -1,6 +1,4 @@
-import email
-from pyexpat import model
-from click import password_option
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
