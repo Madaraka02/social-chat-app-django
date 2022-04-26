@@ -14,7 +14,7 @@ def register(request, *args, **kwargs):
         return HttpResponse(f'You are already auhtenticated as{user.email}')
     context={}
 
-    if request.method == 'POST':
+    if request.POST:
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -39,7 +39,7 @@ def logout_view(request):
     return redirect("home")
 
 
-def login(request, *args, **kwargs):
+def login_view(request, *args, **kwargs):
 
 
     context={}

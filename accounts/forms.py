@@ -20,16 +20,16 @@ class RegistrationForm(UserCreationForm):
 
         except Exception as e:
             return email
-        raise forms.ValidationError('email is already taken')            
+        raise forms.ValidationError(f'email {account.email} is already taken')            
 
-    def clean_email(self):
+    def clean_username(self):
         username = self.cleaned_data['username']
         try:
             account = Account.objects.get(username=username)
 
         except Exception as e:
             return username
-        raise forms.ValidationError('username is already taken')      
+        raise forms.ValidationError(f'username {account.username} is already taken')      
 
 
 class LoginForm(forms.ModelForm):
@@ -48,3 +48,4 @@ class LoginForm(forms.ModelForm):
 
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError("Invalid Login credentials")
+
